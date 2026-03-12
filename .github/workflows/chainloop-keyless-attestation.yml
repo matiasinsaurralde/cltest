@@ -1,0 +1,30 @@
+name: Chainloop Keyless Attestation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  attest:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Chainloop CLI
+        run: curl -sfL https://dl.chainloop.dev/cli/install.sh | bash -s
+
+      - name: Init attestation (keyless)
+        run: |
+          chainloop att init \
+            --org matiasorg \
+            --project matiasproject \
+            --workflow matiasproject
+
+      - name: Push attestation
+        run: chainloop attestation push
